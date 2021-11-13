@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+
+
+				<!-- Main -->
+					<div id="main">
+
+						<!-- Post -->
+							<article class="post">
+								<header>
+									<div class="title">
+										<h2><a href="#">{{ tour.name }}</a></h2>
+										<span class="image featured"><img src="{{tour.get_image}}" style="width: 1000px; height:1000px;" alt="" /></span>
+										<p>{{ tour.description }}</p>
+
+									</div>
+									<div class="meta">
+										<time class="published" datetime="2015-11-01">November 1, 2015</time>
+										{% for image in images %}
+										<img src="{{ image }}" alt="" /></a>
+										{% endfor %}
+
+									</div>
+								</header>
+								<footer>
+									<ul class="stats">
+										<li><a href="#">General</a></li>
+										<li><a href="#" class="icon solid fa-heart">28</a></li>
+										<li><a href="#" class="icon solid fa-comment">128</a></li>
+										<li><a href="{% url 'update' tour.id %}" ><i class="fas fa-edit"></i></a></li>
+										<li><a href="{% url 'delete' tour.id %}" ><i class="fas fa-trash-alt"></i></a></li>
+									</ul>
+								</footer>
+							</article>
+
+
+					</div>
+
+			{% endblock %}
