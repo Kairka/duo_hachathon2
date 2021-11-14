@@ -40,7 +40,7 @@
 
 <!-- Posts List -->
 						{% if not region.get_children %}
-												{% for tour in tours%}
+												{% for tour in tours %}
 							<section>
 								<ul class="posts">
 									<li>
@@ -56,11 +56,12 @@
 											</article>
 									</li>
 								</ul>
+								{% endfor %}
 							</section>
 					</div>
-
-{% endfor %}
-
 {% endif %}
-				{% endblock %}
+
+{% endblock %}
+
+
 
