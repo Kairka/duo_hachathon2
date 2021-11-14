@@ -1,9 +1,10 @@
 from datetime import timedelta
 
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.forms import modelformset_factory
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.utils import timezone
@@ -11,6 +12,7 @@ from django.views.generic import ListView, DetailView, DeleteView
 
 from .forms import TourForm, ImageForm
 from .models import *
+from .permission import UserHasPermissionMixin
 
 
 class MainPageView(ListView):
@@ -79,7 +81,7 @@ class TourDetailView(DetailView):
         image = self.get_object().get_image
         context['images'] = self.get_object().images.exclude(id=image.id)
         return context
-
+@login_required(login_url='login')
 def add_tour(request):
     ImageFormSet = modelformset_factory(Image, form=ImageForm, max_num=5)
     if request.method == 'POST':
@@ -101,21 +103,25 @@ def add_tour(request):
 
 def update_tour(request, pk):
     tour = get_object_or_404(Tour, pk=pk)
-    ImageFormSet = modelformset_factory(Image, form=ImageForm, max_num=5)
-    tour_form = TourForm(request.POST or None, instance=tour)
-    formset = ImageFormSet(request.POST or None, request.FILES or None, queryset=Image.objects.filter(tour=tour))
-    if tour_form.is_valid() and formset.is_valid():
-        tour = tour_form.save()
+    if request.user == tour.user:
+        ImageFormSet = modelformset_factory(Image, form=ImageForm, max_num=5)
+        tour_form = TourForm(request.POST or None, instance=tour)
+        formset = ImageFormSet(request.POST or None, request.FILES or None, queryset=Image.objects.filter(tour=tour))
+        if tour_form.is_valid() and formset.is_valid():
+            tour = tour_form.save()
 
-        for form in formset:
-            image = form.save(commit=False)
-            image.tour = tour
-            image.save()
-            return redirect(tour.get_absolute_url())
-    return render(request, 'update-tour.html', locals())
+            for form in formset:
+                image = form.save(commit=False)
+                image.tour = tour
+                image.save()
+                return redirect(tour.get_absolute_url())
+        return render(request, 'update-tour.html', locals())
+    else:
+        return HttpResponse('<h1> 403 Forbidden</h1>')
 
 
-class DeleteTourView(DeleteView):
+
+class DeleteTourView(UserHasPermissionMixin, DeleteView):
     model = Tour
     template_name = 'delete-tour.html'
     success_url = reverse_lazy('home')

@@ -42,24 +42,20 @@
 						<!-- Links -->
 							<section>
 								<ul class="links">
+									{% if request.user.is_authenticated %}
+									<li><a href="{% url 'profile' %}"><h2>My Profile</h2></a></li>
+									{% endif%}
+									{% if not request.user.is_authenticated %}
+									<li><a href="{% url 'login' %}">
+											<h2>Login</h2>
+									</a></li>
+									{% else %}
 									<li>
-										<a href="#">
-											<h3>Lorem ipsum</h3>
-											<p>Feugiat tempus veroeros dolor</p>
+										<a href="{% url 'logout' %}">
+											<h2>Log out</h2>
 										</a>
 									</li>
-									<li>
-										<a href="#">
-											<h3>Dolor sit amet</h3>
-											<p>Sed vitae justo condimentum</p>
-										</a>
-									</li>
-									<li>
-										<a href="#">
-											<h3>Feugiat veroeros</h3>
-											<p>Phasellus sed ultricies mi congue</p>
-										</a>
-									</li>
+									{% endif %}
 								</ul>
 							</section>
 							<!-- Footer -->
@@ -74,11 +70,12 @@
 							<!-- Actions -->
 							<section>
 								<ul class="actions stacked">
-									<li><a href="#" class="button large fit">Log In</a></li>
+									<li><a href="{% url 'register' %}" class="button large fit">Registration</a></li>
 								</ul>
 							</section>
 
 					</section>
+
 
 
 
@@ -97,7 +94,6 @@
 			<script src="{% static 'assets/js/breakpoints.min.js' %}"></script>
 			<script src="{% static 'assets/js/util.js' %}"></script>
 			<script src="{% static 'assets/js/main.js' %}"></script>
-
 
 
 	</body>
