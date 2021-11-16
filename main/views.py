@@ -29,8 +29,6 @@ class MainPageView(ListView):
             template_name = 'search.html'
         elif filter:
             template_name = 'new.html'
-        else:
-            template_name = 'search.html'
         return template_name
 
     def get_context_data(self, *, object_list=None, **kwargs):
@@ -58,16 +56,6 @@ def detail(request, pk):
     images = tour.images.all()
 
     return render(request, 'tour_detail.html', locals())
-
-    if request.method == 'POST':
-        comment_form = CommentForm(data=request.POST)
-        if comment_form.is_valid():
-            new_comment = comment_form.save(commit=False)
-            new_comment.post = tour
-            new_comment.save()
-        else:
-            comment_form = CommentForm()
-        return render (request,'comment.html', locals())
 
 
 class TourDetailView(DetailView):
@@ -136,5 +124,6 @@ class DeleteTourView(UserHasPermissionMixin, DeleteView):
         self.object.delete()
         messages.add_message(request, messages.SUCCESS, 'Successfully deleted! ')
         return HttpResponseRedirect(success_url)
+
 
 

@@ -25,40 +25,10 @@
 									</div>
 								</header>
 
-{% with comments.count as total_comments %}
-    <h2>
-        {{ total_comments }} comment{{ total_comments|pluralize }}
-    </h2>
-{% endwith %}
-								{% for comment in comments %}
-    <div class="comment">
-        <p class="info">
-            Comment {{ forloop.counter }} by {{ comment.name }}
-            {{ comment.created }}
-        </p>
-        {{ comment.body|linebreaks }}
-    </div>
-{% empty %}
-    <p>There are no comments yet.</p>
-{% endfor %}
-								{% if new_comment %}
-    <h2>Your comment has been added.</h2>
-{% else %}
-    <h2>Add a new comment</h2>
-    <form action="." method="post">
-        {{ comment_form.as_p }}
-		{{ comment.body }}
-
-        {% csrf_token %}
-        <p><input type="submit" value="Add comment"></p>
-    </form>
-{% endif %}
 								<footer>
 									<ul class="stats">
 										<li><a href="#">General</a></li>
 
-										<li><a href="#" class="icon solid fa-heart">28</a></li>
-										<li><a href="#" class="icon solid fa-comment">128</a></li>
 										<li><a href="{% url 'update' tour.id %}" ><i class="fas fa-edit"></i></a></li>
 										<li><a href="{% url 'delete' tour.id %}" ><i class="fas fa-trash-alt"></i></a></li>
 									</ul>

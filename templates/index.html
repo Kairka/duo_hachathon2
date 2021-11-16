@@ -25,31 +25,23 @@
 
 </ul>
 {% endif %}
-								<span class="image featured"><img src="{% static 'images/banner.jpg' %}" alt="" /></span>
+			<span class="image featured"><img src="{% static 'images/banner.jpg' %}" alt="" /></span>
 								<h3>«Кыргызстан — отдых на высоте!»</h3>
 
 							</article>
 
 
-					</div>
 {% for tour in page_obj %}
-							<section>
-								<ul class="posts">
-									<li>
-										<article>
+<div class="card" style="width: 18rem;">
+  <img src="{{tour.get_image }}" class="card-img-top" alt="...">
+	<h3><a href="{% url 'detail' tour.id%}">{{ tour }}</a></h3>
+  <div class="card-body">
+    <p class="card-text">{% url 'detail' tour.id%}</p>
+  </div>
+</div>
 
-											<header>
-												<a href="#" class="image"><img src="{{tour.get_image }}" style="width: 200px; height: 200px; " alt="" /></a>
-
-												<h3><a href="{% url 'detail' tour.id%}">{{ tour }}</a></h3>
-												<p>{{ tour.description|truncatewords:25 }}</p>
-												<time class="published" datetime="2015-10-20">October 20, 2015</time>
-											</header>
-											</article>
-									</li>
-								</ul>
 								{% endfor %}
-							</section>
+
 
 <nav aria-label="...">
   <ul class="pagination pagination-sm">
@@ -65,6 +57,7 @@
 	  {% endif %}
   </ul>
 </nav>
+
 
 			{% endblock %}
 
