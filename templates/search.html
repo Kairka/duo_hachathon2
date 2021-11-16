@@ -1,8 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<h1> Search results: </h1>
+<!--<h1> Search results: </h1>-->
+{% if not tour in tours%}
+<h4> Unfortunately we couldn't find your request!</h4>
+{% endif %}
 {% for tour in tours%}
+
 							<section>
 								<ul class="posts">
 									<li>

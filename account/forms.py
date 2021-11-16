@@ -1,7 +1,17 @@
 from django import forms
+from django.core.mail import send_mail
 
 from .models import User
 
+def send_welcome_email(email):
+    message = f'Спасибо за регистрацию на нашем сайте PyShop 14'
+    send_mail(
+        'Welcome to KG',
+        message,
+        'admin@gmail.com',
+        [email],
+        fail_silently=False
+    )
 
 class RegistrationForm(forms.ModelForm):
     password = forms.CharField(min_length=8, required=True, widget=forms.PasswordInput)

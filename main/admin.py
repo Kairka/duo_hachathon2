@@ -10,4 +10,11 @@ class ImageInlineAdmin(admin.TabularInline):
 class TourAdmin(admin.ModelAdmin):
     inlines = [ImageInlineAdmin]
 
+
+class CommentAdmin(admin.ModelAdmin):
+    list_display = ('name', 'email', 'tour', 'created', 'active')
+    list_filter = ('active', 'created', 'updated')
+    search_fields = ('name', 'email', 'body')
+
+admin.site.register(Comment, CommentAdmin)
 admin.site.register(Region)

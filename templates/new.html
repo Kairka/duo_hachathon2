@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<h1>Novelity</h1>
+{% for tour in tours%}
+
+							<section>
+								<ul class="posts">
+									<li>
+										<article>
+
+											<header>
+												<a href="single.html" class="image"><img src="{{tour.get_image }}" style="width: 200px; height: 200px; " alt="" /></a>
+
+												<h3><a href="{% url 'detail' tour.id%}">{{ tour }}</a></h3>
+												<p>{{ tour.description|truncatewords:25 }}</p>
+												<time class="published" datetime="2015-10-20">October 20, 2015</time>
+											</header>
+											</article>
+									</li>
+								</ul>
+							</section>
+
+
+{% endfor %}
+
+{% endblock %}

@@ -13,7 +13,7 @@
 								<header>
 									<div class="title">
 
-										<h2><a href="{% url 'region' child.slug %}">{{ child.name }}</a></h2>
+										<h2><a>{{ child.name }}</a></h2>
 										<p>Lorem ipsum dolor amet nullam consequat etiam feugiat</p>
 									</div>
 									<div class="meta">
@@ -22,16 +22,13 @@
 									</div>
 								</header>
 								<a href="single.html" class="image featured"><img src="{{ region.image.urls }}" alt="" /></a>
-								<p>Mauris neque quam, fermentum ut nisl vitae, convallis maximus nisl. Sed mattis nunc id lorem euismod placerat. Vivamus porttitor magna enim, ac accumsan tortor cursus at. Phasellus sed ultricies mi non congue ullam corper. Praesent tincidunt sed tellus ut rutrum. Sed vitae justo condimentum, porta lectus vitae, ultricies congue gravida diam non fringilla.</p>
+								<h5>Welcome to our tour!
+									We are glad to see you here!</h5>
 								<footer>
 									<ul class="actions">
-										<li><a href="single.html" class="button large">Continue Reading</a></li>
+										<li><a href="{% url 'region' child.slug %}" class="button large">Continue Reading</a></li>
 									</ul>
-									<ul class="stats">
-										<li><a href="#">General</a></li>
-										<li><a href="#" class="icon solid fa-heart">28</a></li>
-										<li><a href="#" class="icon solid fa-comment">128</a></li>
-									</ul>
+
 								</footer>
 							</article>
 						{% endfor %}
@@ -47,7 +44,7 @@
 										<article>
 
 											<header>
-												<a href="single.html" class="image"><img src="{{tour.get_image }}" style="width: 200px; height: 200px; " alt="" /></a>
+												<a href="{{tour.get_image }}" class="image"><img src="{{tour.get_image }}" style="width: 200px; height: 200px; " alt="" /></a>
 
 												<h3><a href="{% url 'detail' tour.id%}">{{ tour }}</a></h3>
 												<p>{{ tour.description|truncatewords:25 }}</p>

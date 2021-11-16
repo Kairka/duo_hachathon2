@@ -10,7 +10,7 @@ from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.generic import ListView, DetailView, DeleteView
 
-from .forms import TourForm, ImageForm
+from .forms import TourForm, ImageForm, CommentForm
 from .models import *
 from .permission import UserHasPermissionMixin
 
@@ -19,12 +19,17 @@ class MainPageView(ListView):
     model = Tour
     template_name = 'index.html'
     context_object_name = 'tours'
-    paginate_by = 2
+    paginate_by = 4
 
     def get_template_names(self):
         template_name = super(MainPageView, self).get_template_names()
         search = self.request.GET.get('q')
+        filter = self.request.GET.get('filter')
         if search:
+            template_name = 'search.html'
+        elif filter:
+            template_name = 'new.html'
+        else:
             template_name = 'search.html'
         return template_name
 
@@ -47,28 +52,22 @@ def region_detail(request, slug):
     region = Region.objects.get(slug=slug)
     tours = Tour.objects.filter(region_id=slug)
     return render(request, 'region_detail.html', locals())
-# start
-# class RegionDetailView(DetailView):
-#     model = Region
-#     template_name = 'region_detail.html'
-#     context_object_name = 'region'
-#
-#     def get(self, request, *args, **kwargs):
-#         self.object = self.get_object()
-#         self.slug = kwargs.get('slug', None)
-#         return super().get(request, *args, **kwargs)
-#
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         context['tours'] = Tour.objects.filter(region_id=self.slug)
-#         return context
-# end
 
 def detail(request, pk):
     tour = get_object_or_404(Tour, pk=pk)
     images = tour.images.all()
+
     return render(request, 'tour_detail.html', locals())
+
+    if request.method == 'POST':
+        comment_form = CommentForm(data=request.POST)
+        if comment_form.is_valid():
+            new_comment = comment_form.save(commit=False)
+            new_comment.post = tour
+            new_comment.save()
+        else:
+            comment_form = CommentForm()
+        return render (request,'comment.html', locals())
 
 
 class TourDetailView(DetailView):
@@ -81,6 +80,9 @@ class TourDetailView(DetailView):
         image = self.get_object().get_image
         context['images'] = self.get_object().images.exclude(id=image.id)
         return context
+
+
+
 @login_required(login_url='login')
 def add_tour(request):
     ImageFormSet = modelformset_factory(Image, form=ImageForm, max_num=5)
@@ -88,7 +90,9 @@ def add_tour(request):
         tour_form = TourForm(request.POST)
         formset = ImageFormSet(request.POST, request.FILES, queryset=Image.objects.none())
         if tour_form.is_valid() and formset.is_valid():
-            tour = tour_form.save()
+            tour = tour_form.save(commit=False)
+            tour.user = request.user
+            tour.save()
 
             for form in formset.cleaned_data:
                 image = form['image']
